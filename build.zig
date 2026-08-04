@@ -10,7 +10,8 @@ pub fn build(b: *std.Build) !void {
     // Config
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    const enable_opt = b.option(bool, "enable-opt", "Enables spirv-opt capability if present") orelse true;
+    const enable_opt = b.option(bool, "enable_opt", "Enables spirv-opt capability if present") orelse true;
+    const enable_pic = b.option(bool, "enable_pic", "Builds static libraries as position-independent code");
 
     // Upstream Sources
     const spirv_tools_upstream = b.dependency("SPIRV-Tools", .{});
@@ -23,6 +24,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
         }),
     });
     const spirv_tools_shared = b.addLibrary(.{
@@ -128,6 +130,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
         }),
     });
     spirv_tools_diff_static.root_module.link_libcpp = true;
@@ -146,6 +149,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -164,6 +168,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -186,6 +191,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -321,6 +327,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -371,6 +378,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -627,6 +635,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -648,6 +657,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -669,6 +679,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -716,6 +727,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -737,6 +749,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -766,6 +779,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
@@ -784,6 +798,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = b.createModule(.{
             .target = target,
             .optimize = optimize,
+            .pic = enable_pic,
             .link_libcpp = true,
         }),
     });
