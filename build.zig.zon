@@ -2,7 +2,7 @@
     .name = .glslang,
     .fingerprint = 0x274a355f0fac978,
     .version = "1.4.309",
-    .minimum_zig_version = "0.15.2",
+    .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .glslang = .{
             .url = "https://github.com/KhronosGroup/glslang/archive/7200bc12a8979d13b22cd52de80ffb7d41939615.tar.gz",

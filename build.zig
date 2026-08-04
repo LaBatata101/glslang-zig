@@ -35,9 +35,9 @@ pub fn build(b: *std.Build) !void {
     });
     const spirv_tools_builds = [_]*std.Build.Step.Compile{ spirv_tools_static, spirv_tools_shared };
     for (spirv_tools_builds) |spirv_tools_build| {
-        spirv_tools_build.linkLibCpp();
+        spirv_tools_build.root_module.link_libcpp = true;
         configureSpirvToolsLibrary(spirv_tools_build);
-        spirv_tools_build.addCSourceFiles(.{
+        spirv_tools_build.root_module.addCSourceFiles(.{
             .root = spirv_tools_upstream.path("."),
             .files = &.{
                 "tools/io.cpp",
@@ -130,9 +130,9 @@ pub fn build(b: *std.Build) !void {
             .optimize = optimize,
         }),
     });
-    spirv_tools_diff_static.linkLibCpp();
+    spirv_tools_diff_static.root_module.link_libcpp = true;
     configureSpirvToolsLibrary(spirv_tools_diff_static);
-    spirv_tools_diff_static.addCSourceFiles(.{
+    spirv_tools_diff_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/diff"),
         .files = &.{"diff.cpp"},
         .flags = flags,
@@ -150,7 +150,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureSpirvToolsLibrary(spirv_tools_link_static);
-    spirv_tools_link_static.addCSourceFiles(.{
+    spirv_tools_link_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/link"),
         .files = &.{"linker.cpp"},
         .flags = flags,
@@ -168,7 +168,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureSpirvToolsLibrary(spirv_tools_lint_static);
-    spirv_tools_lint_static.addCSourceFiles(.{
+    spirv_tools_lint_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/lint"),
         .files = &.{
             "divergence_analysis.cpp",
@@ -190,7 +190,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureSpirvToolsLibrary(spirv_tools_opt_static);
-    spirv_tools_opt_static.addCSourceFiles(.{
+    spirv_tools_opt_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/opt"),
         .files = &.{
             "aggressive_dead_code_elim_pass.cpp",
@@ -325,7 +325,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureSpirvToolsLibrary(spirv_tools_reduce_static);
-    spirv_tools_reduce_static.addCSourceFiles(.{
+    spirv_tools_reduce_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/reduce"),
         .files = &.{
             "change_operand_reduction_opportunity.cpp",
@@ -375,7 +375,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureSpirvToolsLibrary(spirv_tools_util_internal_static);
-    spirv_tools_util_internal_static.addCSourceFiles(.{
+    spirv_tools_util_internal_static.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/util"),
         .files = &.{
             "flags.cpp",
@@ -393,10 +393,10 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_as_exe.linkLibrary(spirv_tools_static);
-    spirv_as_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_as_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_as_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_as_exe);
-    spirv_as_exe.addCSourceFiles(.{
+    spirv_as_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/as"),
         .files = &.{"as.cpp"},
         .flags = flags,
@@ -417,10 +417,10 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_cfg_exe.linkLibrary(spirv_tools_static);
-    spirv_cfg_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_cfg_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_cfg_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_cfg_exe);
-    spirv_cfg_exe.addCSourceFiles(.{
+    spirv_cfg_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/cfg"),
         .files = &.{
             "bin_to_dot.cpp",
@@ -444,10 +444,10 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_dis_exe.linkLibrary(spirv_tools_static);
-    spirv_dis_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_dis_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_dis_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_dis_exe);
-    spirv_dis_exe.addCSourceFiles(.{
+    spirv_dis_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/dis"),
         .files = &.{"dis.cpp"},
         .flags = flags,
@@ -468,12 +468,12 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_link_exe.linkLibrary(spirv_tools_static);
-    spirv_link_exe.linkLibrary(spirv_tools_util_internal_static);
-    spirv_link_exe.linkLibrary(spirv_tools_link_static);
-    spirv_link_exe.linkLibrary(spirv_tools_opt_static);
+    spirv_link_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_link_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
+    spirv_link_exe.root_module.linkLibrary(spirv_tools_link_static);
+    spirv_link_exe.root_module.linkLibrary(spirv_tools_opt_static);
     configureSpirvToolsBinary(spirv_link_exe);
-    spirv_link_exe.addCSourceFiles(.{
+    spirv_link_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/link"),
         .files = &.{"linker.cpp"},
         .flags = flags,
@@ -494,12 +494,12 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_lint_exe.linkLibrary(spirv_tools_static);
-    spirv_lint_exe.linkLibrary(spirv_tools_util_internal_static);
-    spirv_lint_exe.linkLibrary(spirv_tools_lint_static);
-    spirv_lint_exe.linkLibrary(spirv_tools_opt_static);
+    spirv_lint_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_lint_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
+    spirv_lint_exe.root_module.linkLibrary(spirv_tools_lint_static);
+    spirv_lint_exe.root_module.linkLibrary(spirv_tools_opt_static);
     configureSpirvToolsBinary(spirv_lint_exe);
-    spirv_lint_exe.addCSourceFiles(.{
+    spirv_lint_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/lint"),
         .files = &.{"lint.cpp"},
         .flags = flags,
@@ -520,10 +520,10 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_objdump_exe.linkLibrary(spirv_tools_static);
-    spirv_objdump_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_objdump_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_objdump_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_objdump_exe);
-    spirv_objdump_exe.addCSourceFiles(.{
+    spirv_objdump_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/objdump"),
         .files = &.{
             "extract_source.cpp",
@@ -547,11 +547,11 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_opt_exe.linkLibrary(spirv_tools_opt_static);
-    spirv_opt_exe.linkLibrary(spirv_tools_static);
-    spirv_opt_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_opt_exe.root_module.linkLibrary(spirv_tools_opt_static);
+    spirv_opt_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_opt_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_opt_exe);
-    spirv_opt_exe.addCSourceFiles(.{
+    spirv_opt_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/opt"),
         .files = &.{"opt.cpp"},
         .flags = flags,
@@ -572,12 +572,12 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_reduce_exe.linkLibrary(spirv_tools_reduce_static);
-    spirv_reduce_exe.linkLibrary(spirv_tools_static);
-    spirv_reduce_exe.linkLibrary(spirv_tools_util_internal_static);
-    spirv_reduce_exe.linkLibrary(spirv_tools_opt_static);
+    spirv_reduce_exe.root_module.linkLibrary(spirv_tools_reduce_static);
+    spirv_reduce_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_reduce_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
+    spirv_reduce_exe.root_module.linkLibrary(spirv_tools_opt_static);
     configureSpirvToolsBinary(spirv_reduce_exe);
-    spirv_reduce_exe.addCSourceFiles(.{
+    spirv_reduce_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/reduce"),
         .files = &.{"reduce.cpp"},
         .flags = flags,
@@ -598,10 +598,10 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_val_exe.linkLibrary(spirv_tools_static);
-    spirv_val_exe.linkLibrary(spirv_tools_util_internal_static);
+    spirv_val_exe.root_module.linkLibrary(spirv_tools_static);
+    spirv_val_exe.root_module.linkLibrary(spirv_tools_util_internal_static);
     configureSpirvToolsBinary(spirv_val_exe);
-    spirv_val_exe.addCSourceFiles(.{
+    spirv_val_exe.root_module.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/val"),
         .files = &.{"val.cpp"},
         .flags = flags,
@@ -630,7 +630,7 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    generic_code_gen_static.addCSourceFiles(.{
+    generic_code_gen_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("glslang/GenericCodeGen"),
         .files = &.{
             "CodeGen.cpp",
@@ -651,7 +651,7 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    glslang_default_resource_limits_static.addCSourceFiles(.{
+    glslang_default_resource_limits_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("glslang/ResourceLimits"),
         .files = &.{
             "resource_limits_c.cpp",
@@ -672,7 +672,7 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    machine_independent_static.addCSourceFiles(.{
+    machine_independent_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("glslang/MachineIndependent"),
         .files = &.{
             "attribute.cpp",
@@ -720,7 +720,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureGlslangLibrary(os_dependent_static, enable_opt);
-    os_dependent_static.addCSourceFiles(.{
+    os_dependent_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path(""),
         .files = if (target.result.os.tag == .windows)
             &[_][]const u8{"glslang/OSDependent/Windows/ossource.cpp"}
@@ -740,9 +740,9 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    if (enable_opt) spirv_static.linkLibrary(spirv_tools_opt_static);
+    if (enable_opt) spirv_static.root_module.linkLibrary(spirv_tools_opt_static);
     configureGlslangLibrary(spirv_static, enable_opt);
-    spirv_static.addCSourceFiles(.{
+    spirv_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("SPIRV"),
         .files = &.{
             "CInterface/spirv_c_interface.cpp",
@@ -770,7 +770,7 @@ pub fn build(b: *std.Build) !void {
         }),
     });
     configureGlslangLibrary(spv_remapper_static, enable_opt);
-    spv_remapper_static.addCSourceFiles(.{
+    spv_remapper_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("SPIRV"),
         .files = &.{"SPVRemapper.cpp"},
         .flags = flags,
@@ -787,14 +787,14 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    glslang_static.linkLibrary(spirv_tools_static);
-    glslang_static.linkLibrary(generic_code_gen_static);
-    glslang_static.linkLibrary(glslang_default_resource_limits_static);
-    glslang_static.linkLibrary(machine_independent_static);
-    glslang_static.linkLibrary(spirv_static);
-    if (enable_opt) glslang_static.linkLibrary(spirv_tools_opt_static);
+    glslang_static.root_module.linkLibrary(spirv_tools_static);
+    glslang_static.root_module.linkLibrary(generic_code_gen_static);
+    glslang_static.root_module.linkLibrary(glslang_default_resource_limits_static);
+    glslang_static.root_module.linkLibrary(machine_independent_static);
+    glslang_static.root_module.linkLibrary(spirv_static);
+    if (enable_opt) glslang_static.root_module.linkLibrary(spirv_tools_opt_static);
     configureGlslangLibrary(glslang_static, enable_opt);
-    glslang_static.addCSourceFiles(.{
+    glslang_static.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path(""),
         .files = &.{"glslang/CInterface/glslang_c_interface.cpp"},
         .flags = flags,
@@ -810,9 +810,9 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    glslang_exe.linkLibrary(glslang_static);
-    glslang_static.linkLibrary(os_dependent_static);
-    glslang_exe.addCSourceFiles(.{
+    glslang_exe.root_module.linkLibrary(glslang_static);
+    glslang_static.root_module.linkLibrary(os_dependent_static);
+    glslang_exe.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("StandAlone"),
         .files = &.{"StandAlone.cpp"},
         .flags = flags ++ .{"-DENABLE_SPIRV"},
@@ -834,9 +834,9 @@ pub fn build(b: *std.Build) !void {
             .link_libcpp = true,
         }),
     });
-    spirv_remap_exe.linkLibrary(spv_remapper_static);
-    spirv_remap_exe.linkLibrary(spirv_static);
-    spirv_remap_exe.addCSourceFiles(.{
+    spirv_remap_exe.root_module.linkLibrary(spv_remapper_static);
+    spirv_remap_exe.root_module.linkLibrary(spirv_static);
+    spirv_remap_exe.root_module.addCSourceFiles(.{
         .root = glslang_upstream.path("StandAlone"),
         .files = &.{"spirv-remap.cpp"},
         .flags = flags,
@@ -855,10 +855,10 @@ fn configureSpirvToolsBinary(compile: *std.Build.Step.Compile) void {
     const spirv_headers_upstream = b.dependency("SPIRV-Headers", .{});
     const spirv_tools_upstream = b.dependency("SPIRV-Tools", .{});
 
-    compile.addIncludePath(spirv_tools_upstream.path(""));
-    compile.addIncludePath(spirv_tools_upstream.path("include"));
-    compile.addIncludePath(spirv_headers_upstream.path("include"));
-    compile.addIncludePath(b.path("generated/spirv-tools"));
+    compile.root_module.addIncludePath(spirv_tools_upstream.path(""));
+    compile.root_module.addIncludePath(spirv_tools_upstream.path("include"));
+    compile.root_module.addIncludePath(spirv_headers_upstream.path("include"));
+    compile.root_module.addIncludePath(b.path("generated/spirv-tools"));
 }
 
 fn configureSpirvToolsLibrary(lib: *std.Build.Step.Compile) void {
@@ -890,8 +890,8 @@ fn configureGlslangBinary(compile: *std.Build.Step.Compile, enable_opt: bool) vo
     const b = compile.step.owner;
     const glslang_upstream = b.dependency("glslang", .{});
 
-    compile.addIncludePath(glslang_upstream.path(""));
-    compile.addIncludePath(b.path("generated/glslang"));
+    compile.root_module.addIncludePath(glslang_upstream.path(""));
+    compile.root_module.addIncludePath(b.path("generated/glslang"));
 
     compile.root_module.addCMacro("ENABLE_OPT", if (enable_opt) "1" else "0");
 }
